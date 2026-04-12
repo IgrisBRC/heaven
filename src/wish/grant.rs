@@ -18,6 +18,7 @@ mod hdel;
 mod hexists;
 mod hget;
 mod hgetall;
+mod command;
 mod hlen;
 mod hmget;
 mod hset;
@@ -134,15 +135,17 @@ pub fn grant(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token
     } else if cmd.eq_ignore_ascii_case(b"CONFIG") {
         config::config(terms, temple, tx, token);
     } else if cmd.eq_ignore_ascii_case(b"COMMAND") {
-        if tx
-            .send(Decree::Deliver(Gift {
-                token,
-                response: Response::Info(InfoType::Ok),
-            }))
-            .is_err()
-        {
-            eprintln!("angel panicked");
-        };
+        command::command(terms, tx, token);
+
+        // if tx
+        //     .send(Decree::Deliver(Gift {
+        //         token,
+        //         response: Response::Info(InfoType::Ok),
+        //     }))
+        //     .is_err()
+        // {
+        //     eprintln!("angel panicked");
+        // };
     } else if tx
         .send(Decree::Deliver(Gift {
             token,

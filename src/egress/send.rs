@@ -14,6 +14,42 @@ pub fn send(stream: &mut TcpStream, gift: Gift, response: &mut Vec<u8>) -> Resul
         Response::Info(InfoType::Pong) => {
             response.extend_from_slice(b"+PONG\r\n");
         }
+        Response::Info(InfoType::Command) => {
+            response.extend_from_slice( 
+                b"*32\r\n\
+                *6\r\n$3\r\nset\r\n:-3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$3\r\nget\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$6\r\nappend\r\n:3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nincr\r\n:2\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\ndecr\r\n:2\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$6\r\nstrlen\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$5\r\nlpush\r\n:-3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$5\r\nrpush\r\n:-3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nlpop\r\n:-2\r\n*2\r\n+write\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nrpop\r\n:-2\r\n*2\r\n+write\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$6\r\nlrange\r\n:4\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nlrem\r\n:4\r\n*2\r\n+write\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$6\r\nlindex\r\n:3\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nllen\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nlset\r\n:4\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nhset\r\n:-4\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$5\r\nhmget\r\n:-3\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nhget\r\n:3\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nhdel\r\n:-3\r\n*2\r\n+write\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$7\r\nhexists\r\n:3\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nhlen\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$7\r\nhgetall\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nsadd\r\n:-3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nsrem\r\n:-3\r\n*2\r\n+write\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$9\r\nsismember\r\n:3\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$8\r\nsmembers\r\n:2\r\n*2\r\n+readonly\r\n+sort_for_script\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$6\r\nexists\r\n:-2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n-1\r\n:1\r\n\
+                *6\r\n$3\r\ndel\r\n:-2\r\n*2\r\n+write\r\n+fast\r\n:1\r\n-1\r\n:1\r\n\
+                *6\r\n$3\r\nttl\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$6\r\nexpire\r\n:3\r\n*2\r\n+write\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$7\r\npublish\r\n:3\r\n*3\r\n+pubsub\r\n+loading\r\n+stale\r\n:0\r\n:0\r\n:0\r\n\
+                *6\r\n$4\r\nping\r\n:-1\r\n*2\r\n+stale\r\n+fast\r\n:0\r\n:0\r\n:0\r\n");
+        }
         Response::BulkString(bulk_string) => match bulk_string {
             Some(value) => {
                 response.push(b'$');
@@ -194,6 +230,8 @@ pub fn send(stream: &mut TcpStream, gift: Gift, response: &mut Vec<u8>) -> Resul
                 ),
                 Command::CONFIG => response
                     .extend_from_slice(b"-ERR wrong number of arguments for 'config' command\r\n"),
+                Command::COMMAND => response
+                    .extend_from_slice(b"-ERR wrong number of arguments for 'command' command\r\n"),
             },
             Sacrilege::SubscriberOnlyMode => response.extend_from_slice(
                 b"-ERR only SUBSCRIBE / UNSUBSCRIBE / PING / QUIT allowed in this context\r\n",
