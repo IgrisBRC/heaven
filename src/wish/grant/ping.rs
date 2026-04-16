@@ -16,10 +16,10 @@ pub fn ping(terms: Vec<Vec<u8>>, tx: Sender<Decree>, token: Token) {
                 response: Response::Error(Sacrilege::IncorrectNumberOfArguments(Command::PING)),
             }))
             .is_err()
-        {
-            eprintln!("Failed to send command response: channel closed");
-            return;
-        }
+    {
+        eprintln!("Failed to send command response: channel closed");
+        return;
+    }
 
     if tx
         .send(Decree::Deliver(Gift {

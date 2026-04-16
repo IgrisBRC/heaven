@@ -1,4 +1,4 @@
-use crossbeam_channel::{Receiver, unbounded, Sender};
+use crossbeam_channel::{Receiver, Sender, unbounded};
 
 type Song = Box<dyn FnOnce() + Send + 'static>;
 

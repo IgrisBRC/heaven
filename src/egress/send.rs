@@ -15,7 +15,7 @@ pub fn send(stream: &mut TcpStream, gift: Gift, response: &mut Vec<u8>) -> Resul
             response.extend_from_slice(b"+PONG\r\n");
         }
         Response::Info(InfoType::Command) => {
-            response.extend_from_slice( 
+            response.extend_from_slice(
                 b"*32\r\n\
                 *6\r\n$3\r\nset\r\n:-3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
                 *6\r\n$3\r\nget\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\

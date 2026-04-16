@@ -1,7 +1,7 @@
-use std::collections::HashMap;
-use std::sync::mpsc::{Receiver, Sender};
-use std::io::Write;
 use crate::wish::grant::Decree;
+use std::collections::HashMap;
+use std::io::Write;
+use std::sync::mpsc::{Receiver, Sender};
 
 use mio::Token;
 

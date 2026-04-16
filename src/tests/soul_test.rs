@@ -49,7 +49,10 @@ fn set_then_get_returns_value() {
 #[test]
 fn get_wrong_type_returns_error() {
     let mut s = soul();
-    s.set(str_key("k"), (Value::List(std::collections::VecDeque::new()), None));
+    s.set(
+        str_key("k"),
+        (Value::List(std::collections::VecDeque::new()), None),
+    );
     assert!(s.get(str_key("k"), NOW).is_err());
 }
 
@@ -77,13 +80,19 @@ fn append_to_existing_key_concatenates() {
     s.set(str_key("k"), (Value::String(str_val("hello")), None));
     let len = s.append(str_key("k"), str_val(" world"), NOW).unwrap();
     assert_eq!(len, 11);
-    assert_eq!(s.get(str_key("k"), NOW).unwrap(), Some(str_val("hello world")));
+    assert_eq!(
+        s.get(str_key("k"), NOW).unwrap(),
+        Some(str_val("hello world"))
+    );
 }
 
 #[test]
 fn append_wrong_type_returns_error() {
     let mut s = soul();
-    s.set(str_key("k"), (Value::List(std::collections::VecDeque::new()), None));
+    s.set(
+        str_key("k"),
+        (Value::List(std::collections::VecDeque::new()), None),
+    );
     assert!(s.append(str_key("k"), str_val("x"), NOW).is_err());
 }
 
@@ -147,7 +156,10 @@ fn strlen_existing_string() {
 #[test]
 fn strlen_wrong_type_returns_error() {
     let mut s = soul();
-    s.set(str_key("k"), (Value::List(std::collections::VecDeque::new()), None));
+    s.set(
+        str_key("k"),
+        (Value::List(std::collections::VecDeque::new()), None),
+    );
     assert!(s.strlen(str_key("k"), NOW).is_err());
 }
 
@@ -158,7 +170,10 @@ fn del_existing_keys_returns_count() {
     let mut s = soul();
     s.set(str_key("a"), (Value::String(str_val("1")), None));
     s.set(str_key("b"), (Value::String(str_val("2")), None));
-    assert_eq!(s.del(vec![str_key("a"), str_key("b"), str_key("missing")], NOW), 2);
+    assert_eq!(
+        s.del(vec![str_key("a"), str_key("b"), str_key("missing")], NOW),
+        2
+    );
 }
 
 #[test]
@@ -201,16 +216,23 @@ fn hset_creates_fields_and_returns_added_count() {
 #[test]
 fn hset_update_existing_field_does_not_increment_count() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![(str_val("f"), str_val("v1"))], NOW).unwrap();
-    let added = s.hset(str_key("h"), vec![(str_val("f"), str_val("v2"))], NOW).unwrap();
+    s.hset(str_key("h"), vec![(str_val("f"), str_val("v1"))], NOW)
+        .unwrap();
+    let added = s
+        .hset(str_key("h"), vec![(str_val("f"), str_val("v2"))], NOW)
+        .unwrap();
     assert_eq!(added, 0);
-    assert_eq!(s.hget(str_key("h"), str_val("f"), NOW).unwrap(), Some(str_val("v2")));
+    assert_eq!(
+        s.hget(str_key("h"), str_val("f"), NOW).unwrap(),
+        Some(str_val("v2"))
+    );
 }
 
 #[test]
 fn hget_missing_field_returns_none() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![(str_val("f"), str_val("v"))], NOW).unwrap();
+    s.hset(str_key("h"), vec![(str_val("f"), str_val("v"))], NOW)
+        .unwrap();
     assert_eq!(s.hget(str_key("h"), str_val("nope"), NOW).unwrap(), None);
 }
 
@@ -223,58 +245,90 @@ fn hget_missing_key_returns_none() {
 #[test]
 fn hdel_removes_fields_and_returns_count() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![(str_val("f1"), str_val("v1")), (str_val("f2"), str_val("v2"))], NOW).unwrap();
-    assert_eq!(s.hdel(str_key("h"), vec![str_val("f1"), str_val("missing")], NOW).unwrap(), 1);
+    s.hset(
+        str_key("h"),
+        vec![
+            (str_val("f1"), str_val("v1")),
+            (str_val("f2"), str_val("v2")),
+        ],
+        NOW,
+    )
+    .unwrap();
+    assert_eq!(
+        s.hdel(str_key("h"), vec![str_val("f1"), str_val("missing")], NOW)
+            .unwrap(),
+        1
+    );
     assert_eq!(s.hget(str_key("h"), str_val("f1"), NOW).unwrap(), None);
 }
 
 #[test]
 fn hexists_present_field_returns_one() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![(str_val("f"), str_val("v"))], NOW).unwrap();
+    s.hset(str_key("h"), vec![(str_val("f"), str_val("v"))], NOW)
+        .unwrap();
     assert_eq!(s.hexists(str_key("h"), str_val("f"), NOW).unwrap(), 1);
 }
 
 #[test]
 fn hexists_missing_field_returns_zero() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![(str_val("f"), str_val("v"))], NOW).unwrap();
+    s.hset(str_key("h"), vec![(str_val("f"), str_val("v"))], NOW)
+        .unwrap();
     assert_eq!(s.hexists(str_key("h"), str_val("nope"), NOW).unwrap(), 0);
 }
 
 #[test]
 fn hlen_returns_number_of_fields() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![
-        (str_val("f1"), str_val("v1")),
-        (str_val("f2"), str_val("v2")),
-        (str_val("f3"), str_val("v3")),
-    ], NOW).unwrap();
+    s.hset(
+        str_key("h"),
+        vec![
+            (str_val("f1"), str_val("v1")),
+            (str_val("f2"), str_val("v2")),
+            (str_val("f3"), str_val("v3")),
+        ],
+        NOW,
+    )
+    .unwrap();
     assert_eq!(s.hlen(str_key("h"), NOW).unwrap(), 3);
 }
 
 #[test]
 fn hmget_returns_values_in_order_with_nones_for_missing() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![(str_val("f1"), str_val("v1"))], NOW).unwrap();
-    let result = s.hmget(str_key("h"), vec![str_val("f1"), str_val("f2")], NOW).unwrap();
+    s.hset(str_key("h"), vec![(str_val("f1"), str_val("v1"))], NOW)
+        .unwrap();
+    let result = s
+        .hmget(str_key("h"), vec![str_val("f1"), str_val("f2")], NOW)
+        .unwrap();
     assert_eq!(result, Some(vec![Some(str_val("v1")), None]));
 }
 
 #[test]
 fn hgetall_returns_flat_interleaved_field_value_list() {
     let mut s = soul();
-    s.hset(str_key("h"), vec![
-        (str_val("name"), str_val("alice")),
-        (str_val("age"),  str_val("30")),
-    ], NOW).unwrap();
+    s.hset(
+        str_key("h"),
+        vec![
+            (str_val("name"), str_val("alice")),
+            (str_val("age"), str_val("30")),
+        ],
+        NOW,
+    )
+    .unwrap();
 
     // Soul returns a flat Vec: [field, value, field, value, ...]
     // This mirrors the RESP2 wire format — pairs are NOT tuples (that's RESP3).
     let flat = s.hgetall(str_key("h"), NOW).unwrap().unwrap();
 
     // Must be even length: one value per field
-    assert_eq!(flat.len(), 4, "Expected 4 elements (2 fields × 2), got: {:?}", flat);
+    assert_eq!(
+        flat.len(),
+        4,
+        "Expected 4 elements (2 fields × 2), got: {:?}",
+        flat
+    );
 
     // Collect into a HashMap so we can assert without caring about HashMap order
     let map: std::collections::HashMap<Vec<u8>, Vec<u8>> = flat
@@ -287,7 +341,7 @@ fn hgetall_returns_flat_interleaved_field_value_list() {
         .collect();
 
     assert_eq!(map.get(&str_val("name")), Some(&str_val("alice")));
-    assert_eq!(map.get(&str_val("age")),  Some(&str_val("30")));
+    assert_eq!(map.get(&str_val("age")), Some(&str_val("30")));
 }
 
 // ── LPUSH / RPUSH / LPOP / RPOP / LLEN / LRANGE / LINDEX / LSET / LREM ──────
@@ -296,7 +350,11 @@ fn hgetall_returns_flat_interleaved_field_value_list() {
 fn lpush_creates_list_and_prepends() {
     let mut s = soul();
     // lpush a b → list is [b, a]
-    assert_eq!(s.lpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW).unwrap(), 2);
+    assert_eq!(
+        s.lpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW)
+            .unwrap(),
+        2
+    );
     let range = s.lrange(str_key("l"), 0, -1, NOW).unwrap().unwrap();
     assert_eq!(range[0], Some(str_val("b")));
     assert_eq!(range[1], Some(str_val("a")));
@@ -305,7 +363,8 @@ fn lpush_creates_list_and_prepends() {
 #[test]
 fn rpush_appends_in_order() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW).unwrap();
+    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW)
+        .unwrap();
     let range = s.lrange(str_key("l"), 0, -1, NOW).unwrap().unwrap();
     assert_eq!(range, vec![Some(str_val("a")), Some(str_val("b"))]);
 }
@@ -313,7 +372,8 @@ fn rpush_appends_in_order() {
 #[test]
 fn lpop_removes_and_returns_head() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW).unwrap();
+    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW)
+        .unwrap();
     assert_eq!(s.lpop(str_key("l"), NOW).unwrap(), Some(str_val("a")));
     assert_eq!(s.llen(str_key("l"), NOW).unwrap(), 1);
 }
@@ -321,7 +381,8 @@ fn lpop_removes_and_returns_head() {
 #[test]
 fn rpop_removes_and_returns_tail() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW).unwrap();
+    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW)
+        .unwrap();
     assert_eq!(s.rpop(str_key("l"), NOW).unwrap(), Some(str_val("b")));
 }
 
@@ -348,15 +409,28 @@ fn llen_missing_key_is_zero() {
 #[test]
 fn lrange_full_range() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
     let r = s.lrange(str_key("l"), 0, -1, NOW).unwrap().unwrap();
-    assert_eq!(r, vec![Some(str_val("a")), Some(str_val("b")), Some(str_val("c"))]);
+    assert_eq!(
+        r,
+        vec![Some(str_val("a")), Some(str_val("b")), Some(str_val("c"))]
+    );
 }
 
 #[test]
 fn lrange_negative_indices() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
     let r = s.lrange(str_key("l"), -2, -1, NOW).unwrap().unwrap();
     assert_eq!(r, vec![Some(str_val("b")), Some(str_val("c"))]);
 }
@@ -373,14 +447,24 @@ fn lrange_out_of_bounds_returns_empty() {
 #[test]
 fn lindex_valid_index() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
     assert_eq!(s.lindex(str_key("l"), 1, NOW).unwrap(), Some(str_val("b")));
 }
 
 #[test]
 fn lindex_negative_index() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
     assert_eq!(s.lindex(str_key("l"), -1, NOW).unwrap(), Some(str_val("c")));
 }
 
@@ -394,7 +478,8 @@ fn lindex_out_of_range_returns_none() {
 #[test]
 fn lset_replaces_element() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW).unwrap();
+    s.rpush(str_key("l"), vec![str_val("a"), str_val("b")], NOW)
+        .unwrap();
     s.lset(str_key("l"), 1, str_val("X"), NOW).unwrap();
     assert_eq!(s.lindex(str_key("l"), 1, NOW).unwrap(), Some(str_val("X")));
 }
@@ -409,20 +494,37 @@ fn lset_out_of_range_returns_error() {
 #[test]
 fn lrem_removes_from_head() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![
-        str_val("a"), str_val("b"), str_val("a"), str_val("c"), str_val("a"),
-    ], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![
+            str_val("a"),
+            str_val("b"),
+            str_val("a"),
+            str_val("c"),
+            str_val("a"),
+        ],
+        NOW,
+    )
+    .unwrap();
     // count=2 removes first 2 "a"s
     let removed = s.lrem(str_key("l"), 2, str_val("a"), NOW).unwrap();
     assert_eq!(removed, 2);
     let r = s.lrange(str_key("l"), 0, -1, NOW).unwrap().unwrap();
-    assert_eq!(r, vec![Some(str_val("b")), Some(str_val("c")), Some(str_val("a"))]);
+    assert_eq!(
+        r,
+        vec![Some(str_val("b")), Some(str_val("c")), Some(str_val("a"))]
+    );
 }
 
 #[test]
 fn lrem_count_zero_removes_all() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b"), str_val("a")], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![str_val("a"), str_val("b"), str_val("a")],
+        NOW,
+    )
+    .unwrap();
     let removed = s.lrem(str_key("l"), 0, str_val("a"), NOW).unwrap();
     assert_eq!(removed, 2);
 }
@@ -430,13 +532,25 @@ fn lrem_count_zero_removes_all() {
 #[test]
 fn lrem_negative_count_removes_from_tail() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![
-        str_val("a"), str_val("b"), str_val("a"), str_val("c"), str_val("a"),
-    ], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![
+            str_val("a"),
+            str_val("b"),
+            str_val("a"),
+            str_val("c"),
+            str_val("a"),
+        ],
+        NOW,
+    )
+    .unwrap();
     let removed = s.lrem(str_key("l"), -2, str_val("a"), NOW).unwrap();
     assert_eq!(removed, 2);
     let r = s.lrange(str_key("l"), 0, -1, NOW).unwrap().unwrap();
-    assert_eq!(r, vec![Some(str_val("a")), Some(str_val("b")), Some(str_val("c"))]);
+    assert_eq!(
+        r,
+        vec![Some(str_val("a")), Some(str_val("b")), Some(str_val("c"))]
+    );
 }
 
 // ── LPOP_M / RPOP_M ──────────────────────────────────────────────────────────
@@ -444,7 +558,12 @@ fn lrem_negative_count_removes_from_tail() {
 #[test]
 fn lpop_m_pops_n_elements() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
     let popped = s.lpop_m(str_key("l"), 2, NOW).unwrap().unwrap();
     assert_eq!(popped, vec![Some(str_val("a")), Some(str_val("b"))]);
     assert_eq!(s.llen(str_key("l"), NOW).unwrap(), 1);
@@ -453,7 +572,12 @@ fn lpop_m_pops_n_elements() {
 #[test]
 fn rpop_m_pops_n_elements_from_tail() {
     let mut s = soul();
-    s.rpush(str_key("l"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
+    s.rpush(
+        str_key("l"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
     let popped = s.rpop_m(str_key("l"), 2, NOW).unwrap().unwrap();
     assert_eq!(popped, vec![Some(str_val("c")), Some(str_val("b"))]);
 }
@@ -463,21 +587,38 @@ fn rpop_m_pops_n_elements_from_tail() {
 #[test]
 fn sadd_adds_new_members_returns_count() {
     let mut s = soul();
-    assert_eq!(s.sadd(str_key("s"), vec![str_val("a"), str_val("b")], NOW).unwrap(), 2);
+    assert_eq!(
+        s.sadd(str_key("s"), vec![str_val("a"), str_val("b")], NOW)
+            .unwrap(),
+        2
+    );
 }
 
 #[test]
 fn sadd_duplicate_not_counted() {
     let mut s = soul();
     s.sadd(str_key("s"), vec![str_val("a")], NOW).unwrap();
-    assert_eq!(s.sadd(str_key("s"), vec![str_val("a"), str_val("b")], NOW).unwrap(), 1);
+    assert_eq!(
+        s.sadd(str_key("s"), vec![str_val("a"), str_val("b")], NOW)
+            .unwrap(),
+        1
+    );
 }
 
 #[test]
 fn srem_removes_members_returns_count() {
     let mut s = soul();
-    s.sadd(str_key("s"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
-    assert_eq!(s.srem(str_key("s"), vec![str_val("a"), str_val("missing")], NOW).unwrap(), 1);
+    s.sadd(
+        str_key("s"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
+    assert_eq!(
+        s.srem(str_key("s"), vec![str_val("a"), str_val("missing")], NOW)
+            .unwrap(),
+        1
+    );
     assert_eq!(s.sismember(str_key("s"), str_val("a"), NOW).unwrap(), 0);
 }
 
@@ -497,10 +638,18 @@ fn sismember_absent_returns_zero() {
 #[test]
 fn smembers_returns_all_members() {
     let mut s = soul();
-    s.sadd(str_key("s"), vec![str_val("a"), str_val("b"), str_val("c")], NOW).unwrap();
+    s.sadd(
+        str_key("s"),
+        vec![str_val("a"), str_val("b"), str_val("c")],
+        NOW,
+    )
+    .unwrap();
     let mut members = s.smembers(str_key("s"), NOW).unwrap().unwrap();
     members.sort();
-    assert_eq!(members, vec![Some(str_val("a")), Some(str_val("b")), Some(str_val("c"))]);
+    assert_eq!(
+        members,
+        vec![Some(str_val("a")), Some(str_val("b")), Some(str_val("c"))]
+    );
 }
 
 // ── EXPIRE / TTL ──────────────────────────────────────────────────────────────
@@ -525,7 +674,7 @@ fn expire_missing_key_returns_zero() {
 
 #[test]
 fn ttl_returns_remaining_seconds() {
-    use std::time::{SystemTime, Duration};
+    use std::time::{Duration, SystemTime};
     let mut s = soul();
     s.set(str_key("k"), (Value::String(str_val("v")), Some(NOW + 100)));
     // TTL takes a SystemTime; we use UNIX_EPOCH + NOW as the reference point

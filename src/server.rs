@@ -17,43 +17,43 @@ use mio::{Events, Interest, Poll, Token};
 /// Errors that can occur during server startup
 #[derive(Debug)]
 pub enum ServerStartupError {
- InvalidIpAddress(String),
- PollCreationFailed(std::io::Error),
- BindFailed(std::io::Error),
- InvalidPath(PathBuf),
+    InvalidIpAddress(String),
+    PollCreationFailed(std::io::Error),
+    BindFailed(std::io::Error),
+    InvalidPath(PathBuf),
 }
 
 impl std::fmt::Display for ServerStartupError {
- fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
- match self {
- Self::InvalidIpAddress(ip) => write!(f, "Invalid IPv4 address: {}", ip),
- Self::PollCreationFailed(e) => write!(f, "Failed to create poll instance: {}", e),
- Self::BindFailed(e) => write!(f, "Failed to bind to address: {}", e),
- Self::InvalidPath(path) => write!(f, "Path contains invalid UTF-8: {:?}", path),
- }
- }
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::InvalidIpAddress(ip) => write!(f, "Invalid IPv4 address: {}", ip),
+            Self::PollCreationFailed(e) => write!(f, "Failed to create poll instance: {}", e),
+            Self::BindFailed(e) => write!(f, "Failed to bind to address: {}", e),
+            Self::InvalidPath(path) => write!(f, "Path contains invalid UTF-8: {:?}", path),
+        }
+    }
 }
 
 impl std::error::Error for ServerStartupError {}
 
 pub fn run(
- ipv4_address: &str,
- port: u16,
- io_threads: usize,
- event_capacity: usize,
- dir: PathBuf,
- dbfilename: &str,
- max_memory: u64,
- append_only: &str,
+    ipv4_address: &str,
+    port: u16,
+    io_threads: usize,
+    event_capacity: usize,
+    dir: PathBuf,
+    dbfilename: &str,
+    max_memory: u64,
+    append_only: &str,
 ) -> Result<(), ServerStartupError> {
- let ipv4_addr = Ipv4Addr::from_str(ipv4_address)
- .map_err(|_| ServerStartupError::InvalidIpAddress(ipv4_address.to_string()))?;
- let socket_addr_v4 = SocketAddrV4::new(ipv4_addr, port);
- let socket_addr = SocketAddr::V4(socket_addr_v4);
+    let ipv4_addr = Ipv4Addr::from_str(ipv4_address)
+        .map_err(|_| ServerStartupError::InvalidIpAddress(ipv4_address.to_string()))?;
+    let socket_addr_v4 = SocketAddrV4::new(ipv4_addr, port);
+    let socket_addr = SocketAddr::V4(socket_addr_v4);
 
- let mut poll = Poll::new().map_err(ServerStartupError::PollCreationFailed)?;
+    let mut poll = Poll::new().map_err(ServerStartupError::PollCreationFailed)?;
 
- let mut listener = TcpListener::bind(socket_addr).map_err(ServerStartupError::BindFailed)?;
+    let mut listener = TcpListener::bind(socket_addr).map_err(ServerStartupError::BindFailed)?;
 
     const SERVER: Token = Token(0);
 
@@ -61,10 +61,10 @@ pub fn run(
 
     poll.registry()
         .register(&mut listener, SERVER, Interest::READABLE)
-     .map_err(|e| {
-     eprintln!("Failed to register listener with poll: {}", e);
-     ServerStartupError::PollCreationFailed(e)
-     })?;
+        .map_err(|e| {
+            eprintln!("Failed to register listener with poll: {}", e);
+            ServerStartupError::PollCreationFailed(e)
+        })?;
 
     let mut ingress_map: HashMap<Token, Pilgrim> = HashMap::new();
 
@@ -74,12 +74,12 @@ pub fn run(
 
     let mut itoa_buf = itoa::Buffer::new();
 
-     let dir_str = dir
-     .to_str()
-     .ok_or_else(|| ServerStartupError::InvalidPath(dir.clone()))?;
-    
-     let temple = Temple::worship(
-     dir_str.into(),
+    let dir_str = dir
+        .to_str()
+        .ok_or_else(|| ServerStartupError::InvalidPath(dir.clone()))?;
+
+    let temple = Temple::worship(
+        dir_str.into(),
         dbfilename.into(),
         ipv4_address.into(),
         itoa_buf.format(port).into(),
@@ -179,35 +179,41 @@ pub fn run(
                             }
 
                             let std_stream: TcpStream = stream.into();
-                             let std_stream_clone = match std_stream.try_clone() {
-                             Ok(clone) => clone,
-                             Err(e) => {
-                             eprintln!("Failed to clone socket for client {:?}: {}", pilgrim_token, e);
-                             continue;
-                             }
-                             };
-                            
-                             let ingress_mio = mio::net::TcpStream::from_std(std_stream);
-                             let egress_mio = mio::net::TcpStream::from_std(std_stream_clone);
-                            
-                             pilgrim_counter += 1;
-                            
-                             ingress_map.insert(
-                             pilgrim_token,
-                             Pilgrim {
-                             stream: ingress_mio,
-                             virtue: None,
-                             tx: pilgrim_tx.clone(),
-                             },
-                             );
-                            
-                             if pilgrim_tx
-                             .send(Decree::Welcome(pilgrim_token, egress_mio))
-                             .is_err()
-                             {
-                             eprintln!("Failed to send welcome to egress for client {:?}: channel closed", pilgrim_token);
-                             ingress_map.remove(&pilgrim_token);
-                             }
+                            let std_stream_clone = match std_stream.try_clone() {
+                                Ok(clone) => clone,
+                                Err(e) => {
+                                    eprintln!(
+                                        "Failed to clone socket for client {:?}: {}",
+                                        pilgrim_token, e
+                                    );
+                                    continue;
+                                }
+                            };
+
+                            let ingress_mio = mio::net::TcpStream::from_std(std_stream);
+                            let egress_mio = mio::net::TcpStream::from_std(std_stream_clone);
+
+                            pilgrim_counter += 1;
+
+                            ingress_map.insert(
+                                pilgrim_token,
+                                Pilgrim {
+                                    stream: ingress_mio,
+                                    virtue: None,
+                                    tx: pilgrim_tx.clone(),
+                                },
+                            );
+
+                            if pilgrim_tx
+                                .send(Decree::Welcome(pilgrim_token, egress_mio))
+                                .is_err()
+                            {
+                                eprintln!(
+                                    "Failed to send welcome to egress for client {:?}: channel closed",
+                                    pilgrim_token
+                                );
+                                ingress_map.remove(&pilgrim_token);
+                            }
                         }
                         Err(err) => {
                             if err.kind() == ErrorKind::WouldBlock {

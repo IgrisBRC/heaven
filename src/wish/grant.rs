@@ -8,6 +8,7 @@ use crate::{
 use std::sync::mpsc::Sender;
 
 mod append;
+mod command;
 mod config;
 mod decr;
 mod del;
@@ -18,7 +19,6 @@ mod hdel;
 mod hexists;
 mod hget;
 mod hgetall;
-mod command;
 mod hlen;
 mod hmget;
 mod hset;

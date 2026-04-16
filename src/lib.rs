@@ -1,7 +1,7 @@
-pub mod temple;
 pub mod choir;
-pub mod wish;
 pub mod egress;
+pub mod temple;
+pub mod wish;
 
 #[cfg(test)]
 mod tests;

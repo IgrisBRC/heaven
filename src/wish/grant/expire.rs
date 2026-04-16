@@ -65,11 +65,5 @@ pub fn expire(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, toke
         .map(|d| d.as_secs())
         .unwrap_or(0);
 
-    temple.expire(
-        tx,
-        key,
-        now + expiry,
-        token,
-        now,
-    );
+    temple.expire(tx, key, now + expiry, token, now);
 }

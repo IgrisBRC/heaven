@@ -7,7 +7,10 @@ use crate::{
         grant::{Decree, Gift},
     },
 };
-use std::{sync::mpsc::Sender, time::{SystemTime, UNIX_EPOCH}};
+use std::{
+    sync::mpsc::Sender,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 pub fn hset(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token: Token) {
     let terms_len = terms.len();

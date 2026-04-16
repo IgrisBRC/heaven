@@ -34,17 +34,17 @@ fn main() {
         .dir
         .unwrap_or_else(|| std::env::current_dir().expect("Couldn't access current directory"));
 
- if let Err(e) = server::run(
- &args.ip,
- args.port,
- args.io_threads,
- args.event_limit,
- dir,
- &args.dbfilename,
- 0,
- "no",
- ) {
- eprintln!("Server failed to start: {}", e);
- std::process::exit(1);
- }
+    if let Err(e) = server::run(
+        &args.ip,
+        args.port,
+        args.io_threads,
+        args.event_limit,
+        dir,
+        &args.dbfilename,
+        0,
+        "no",
+    ) {
+        eprintln!("Server failed to start: {}", e);
+        std::process::exit(1);
+    }
 }

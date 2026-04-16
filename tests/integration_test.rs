@@ -122,7 +122,10 @@ fn test_hash_operations() {
     // Test HGET
     let hget_cmd = "*3\r\n$4\r\nHGET\r\n$4\r\nuser\r\n$4\r\nname\r\n";
     let response = send_command("127.0.0.1", port, hget_cmd).unwrap();
-    assert!(response.contains("John"), "HGET should return the field value");
+    assert!(
+        response.contains("John"),
+        "HGET should return the field value"
+    );
 
     // Cleanup
     let _ = server.kill();
@@ -247,7 +250,10 @@ fn test_set_get() {
     // Test GET
     let get_cmd = "*2\r\n$3\r\nGET\r\n$3\r\nkey\r\n";
     let response = send_command("127.0.0.1", port, get_cmd).unwrap();
-    assert!(response.contains("$5\r\nvalue"), "GET should return the value");
+    assert!(
+        response.contains("$5\r\nvalue"),
+        "GET should return the value"
+    );
 
     // Cleanup
     let _ = server.kill();
@@ -277,4 +283,3 @@ fn test_incr_decr() {
     // Cleanup
     let _ = server.kill();
 }
-

@@ -402,10 +402,7 @@ impl Temple {
             let mut soul: Soul = (|| {
                 let db_file_path = [dir.as_slice(), b"/", dbfilename.as_slice()].concat();
 
-
-                let Ok(db_file_path) =
-                    std::str::from_utf8(&db_file_path)
-                else {
+                let Ok(db_file_path) = std::str::from_utf8(&db_file_path) else {
                     println!("Couldn't load snapshot, failed to access file");
                     return Soul::new();
                 };
@@ -462,7 +459,9 @@ impl Temple {
                             Server(server_command) => match server_command {
                                 Save { tx, file_path } => {
                                     if tx.send(soul.save(file_path)).is_err() {
-                                     eprintln!("Failed to send SAVE result: Temple channel closed");
+                                        eprintln!(
+                                            "Failed to send SAVE result: Temple channel closed"
+                                        );
                                     }
 
                                     break;
@@ -470,7 +469,9 @@ impl Temple {
                                 GetFilePath { tx } => {
                                     let Some(dir) = config.get("dir".as_bytes()) else {
                                         if tx.send(Err(ServerError::ValueNotSet)).is_err() {
-                                            eprintln!("Failed to send command response: channel closed");
+                                            eprintln!(
+                                                "Failed to send command response: channel closed"
+                                            );
                                         }
 
                                         return;
@@ -479,7 +480,9 @@ impl Temple {
                                     let Some(dbfilename) = config.get("dbfilename".as_bytes())
                                     else {
                                         if tx.send(Err(ServerError::ValueNotSet)).is_err() {
-                                            eprintln!("Failed to send command response: channel closed");
+                                            eprintln!(
+                                                "Failed to send command response: channel closed"
+                                            );
                                         }
 
                                         return;
@@ -492,7 +495,9 @@ impl Temple {
                                     file_path.extend(dbfilename);
 
                                     if tx.send(Ok(file_path)).is_err() {
-                                        eprintln!("Failed to send command response: channel closed");
+                                        eprintln!(
+                                            "Failed to send command response: channel closed"
+                                        );
                                     }
                                 }
                             },
@@ -517,7 +522,9 @@ impl Temple {
                                                 }))
                                                 .is_err()
                                             {
-                                                eprintln!("Failed to send command response: channel closed");
+                                                eprintln!(
+                                                    "Failed to send command response: channel closed"
+                                                );
                                             }
 
                                             continue;
@@ -539,7 +546,9 @@ impl Temple {
                                                 }))
                                                 .is_err()
                                             {
-                                                eprintln!("Failed to send command response: channel closed");
+                                                eprintln!(
+                                                    "Failed to send command response: channel closed"
+                                                );
                                             };
 
                                             continue;
@@ -553,7 +562,9 @@ impl Temple {
                                                 ))
                                                 .is_err()
                                             {
-                                                eprintln!("Failed to send command response: channel closed");
+                                                eprintln!(
+                                                    "Failed to send command response: channel closed"
+                                                );
                                             }
                                         }
                                     },
@@ -568,7 +579,9 @@ impl Temple {
                                                 }))
                                                 .is_err()
                                             {
-                                                eprintln!("Failed to send command response: channel closed");
+                                                eprintln!(
+                                                    "Failed to send command response: channel closed"
+                                                );
                                             }
 
                                             continue;
@@ -585,7 +598,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -596,7 +611,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -610,7 +627,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                             Del { keys, time } => {
@@ -623,7 +642,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                             Append { key, value, time } => {
@@ -636,7 +657,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -649,7 +672,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -664,7 +689,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -675,7 +702,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -688,7 +717,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -699,7 +730,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -712,18 +745,22 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                     eprintln!("Failed to send command response: channel closed");
-                                                     }
-                                                     }
-                                                     Err(sacrilege) => {
-                                                     if tx
-                                                     .send(Decree::Deliver(Gift {
-                                                     token,
-                                                     response: Response::Error(sacrilege),
-                                                     }))
-                                                     .is_err()
-                                                     {
-                                                     eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
+                                                    }
+                                                }
+                                                Err(sacrilege) => {
+                                                    if tx
+                                                        .send(Decree::Deliver(Gift {
+                                                            token,
+                                                            response: Response::Error(sacrilege),
+                                                        }))
+                                                        .is_err()
+                                                    {
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -737,7 +774,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                             Hset {
@@ -756,7 +795,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     };
                                                 }
                                                 Err(sacrilege) => {
@@ -767,7 +808,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     };
                                                 }
                                             },
@@ -783,7 +826,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -796,7 +841,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -814,7 +861,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -825,7 +874,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -839,7 +890,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -852,7 +905,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -868,7 +923,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -879,7 +936,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -892,7 +951,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -903,7 +964,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -921,7 +984,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -932,7 +997,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -945,7 +1012,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -956,7 +1025,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -972,7 +1043,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -985,7 +1058,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1004,7 +1079,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -1015,7 +1092,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -1028,7 +1107,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -1039,7 +1120,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -1055,7 +1138,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -1068,7 +1153,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1082,7 +1169,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -1093,7 +1182,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -1118,7 +1209,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -1129,7 +1222,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -1145,7 +1240,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -1158,7 +1255,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1178,7 +1277,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -1189,7 +1290,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -1207,7 +1310,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                                 Err(sacrilege) => {
@@ -1218,7 +1323,9 @@ impl Temple {
                                                         }))
                                                         .is_err()
                                                     {
-                                                        eprintln!("Failed to send command response: channel closed");
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
                                                     }
                                                 }
                                             },
@@ -1232,7 +1339,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                             Ttl { key, time } => {
@@ -1245,7 +1354,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                             Mset { terms_iter } => {
@@ -1258,7 +1369,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                             Mget { terms_iter, time } => {
@@ -1273,7 +1386,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                             Sadd { key, values, time } => {
@@ -1286,7 +1401,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -1299,7 +1416,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1314,7 +1433,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -1327,7 +1448,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1342,7 +1465,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -1355,7 +1480,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1372,7 +1499,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -1385,7 +1514,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1402,7 +1533,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                     Err(sacrilege) => {
@@ -1415,7 +1548,9 @@ impl Temple {
                                                             }))
                                                             .is_err()
                                                         {
-                                                            eprintln!("Failed to send command response: channel closed");
+                                                            eprintln!(
+                                                                "Failed to send command response: channel closed"
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -1456,7 +1591,9 @@ impl Temple {
                                                     }))
                                                     .is_err()
                                                 {
-                                                    eprintln!("Failed to send command response: channel closed");
+                                                    eprintln!(
+                                                        "Failed to send command response: channel closed"
+                                                    );
                                                 }
                                             }
                                         }

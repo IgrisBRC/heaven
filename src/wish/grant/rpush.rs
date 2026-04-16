@@ -6,7 +6,10 @@ use crate::{
     },
 };
 use mio::Token;
-use std::{sync::mpsc::Sender, time::{SystemTime, UNIX_EPOCH}};
+use std::{
+    sync::mpsc::Sender,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 pub fn rpush(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token: Token) {
     if terms.len() < 3 {

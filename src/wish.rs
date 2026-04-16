@@ -108,7 +108,7 @@ pub enum Command {
     HGETALL,
     SMEMBERS,
     CONFIG,
-    COMMAND
+    COMMAND,
 }
 
 #[derive(Debug)]
@@ -122,7 +122,7 @@ pub enum Sacrilege {
 pub enum InfoType {
     Ok,
     Pong,
-    Command
+    Command,
 }
 
 pub enum Response {

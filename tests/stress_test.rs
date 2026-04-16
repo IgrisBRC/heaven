@@ -18,7 +18,10 @@ fn build_binary() -> PathBuf {
         .expect("Failed to build binary");
 
     if !output.status.success() {
-        panic!("Failed to build binary: {}", String::from_utf8_lossy(&output.stderr));
+        panic!(
+            "Failed to build binary: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
     }
 
     let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -86,7 +89,10 @@ fn test_concurrent_set_operations() {
                     let value = format!("value{}_{}", thread_id, i);
                     let cmd = format!(
                         "*3\r\n$3\r\nSET\r\n${}\r\n{}\r\n${}\r\n{}\r\n",
-                        key.len(), key, value.len(), value
+                        key.len(),
+                        key,
+                        value.len(),
+                        value
                     );
 
                     if let Ok(resp) = send_command("127.0.0.1", port, &cmd) {
@@ -222,10 +228,12 @@ fn test_mixed_workload() {
                             let value = format!("value{}", i);
                             let cmd = format!(
                                 "*3\r\n$3\r\nSET\r\n${}\r\n{}\r\n${}\r\n{}\r\n",
-                                key.len(), key, value.len(), value
+                                key.len(),
+                                key,
+                                value.len(),
+                                value
                             );
-                            send_command("127.0.0.1", port, &cmd)
-                                .map(|r| r.contains("+OK"))
+                            send_command("127.0.0.1", port, &cmd).map(|r| r.contains("+OK"))
                         }
                         1 => {
                             // GET
@@ -320,7 +328,9 @@ fn test_pubsub_stress() {
             let counter = Arc::clone(&messages_received);
             thread::spawn(move || {
                 let mut stream = TcpStream::connect(("127.0.0.1", port)).unwrap();
-                stream.set_read_timeout(Some(Duration::from_secs(10))).unwrap();
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(10)))
+                    .unwrap();
 
                 // Subscribe
                 let sub_cmd = "*2\r\n$9\r\nSUBSCRIBE\r\n$7\r\nchannel\r\n";
@@ -365,7 +375,8 @@ fn test_pubsub_stress() {
                     let msg = format!("pub{}_msg{}", pub_id, msg_id);
                     let cmd = format!(
                         "*3\r\n$7\r\nPUBLISH\r\n$7\r\nchannel\r\n${}\r\n{}\r\n",
-                        msg.len(), msg
+                        msg.len(),
+                        msg
                     );
                     let _ = send_command("127.0.0.1", port, &cmd);
                     thread::sleep(Duration::from_millis(10));
@@ -414,7 +425,10 @@ fn test_large_payloads() {
     );
 
     let response = send_command("127.0.0.1", port, &set_cmd).unwrap();
-    assert!(response.contains("+OK"), "SET with 1KB value should succeed");
+    assert!(
+        response.contains("+OK"),
+        "SET with 1KB value should succeed"
+    );
 
     // Retrieve and verify
     let get_cmd = "*2\r\n$3\r\nGET\r\n$8\r\nlargekey\r\n";
@@ -426,4 +440,3 @@ fn test_large_payloads() {
 
     let _ = server.kill();
 }
-

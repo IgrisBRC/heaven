@@ -1,4 +1,7 @@
-use std::{sync::mpsc::Sender, time::{SystemTime, UNIX_EPOCH}};
+use std::{
+    sync::mpsc::Sender,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use mio::Token;
 
