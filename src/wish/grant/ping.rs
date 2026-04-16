@@ -17,7 +17,7 @@ pub fn ping(terms: Vec<Vec<u8>>, tx: Sender<Decree>, token: Token) {
             }))
             .is_err()
         {
-            eprintln!("angel panicked");
+            eprintln!("Failed to send command response: channel closed");
             return;
         }
 
@@ -28,6 +28,6 @@ pub fn ping(terms: Vec<Vec<u8>>, tx: Sender<Decree>, token: Token) {
         }))
         .is_err()
     {
-        eprintln!("angel panicked");
+        eprintln!("Failed to send command response: channel closed");
     };
 }

@@ -2,7 +2,7 @@ use mio::Token;
 
 use crate::{
     temple::Temple,
-    wish::{InfoType, Response, Sacrilege},
+    wish::{Response, Sacrilege},
 };
 
 use std::sync::mpsc::Sender;
@@ -144,7 +144,7 @@ pub fn grant(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token
         //     }))
         //     .is_err()
         // {
-        //     eprintln!("angel panicked");
+        //     eprintln!("Failed to send command response: channel closed");
         // };
     } else if tx
         .send(Decree::Deliver(Gift {
@@ -153,6 +153,6 @@ pub fn grant(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token
         }))
         .is_err()
     {
-        eprintln!("angel panicked");
+        eprintln!("Failed to send command response: channel closed");
     }
 }

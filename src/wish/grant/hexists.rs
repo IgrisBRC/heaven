@@ -19,7 +19,7 @@ pub fn hexists(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, tok
             }))
             .is_err()
         {
-            eprintln!("angel panicked");
+            eprintln!("Failed to send command response: channel closed");
         }
 
         return;
@@ -46,6 +46,6 @@ pub fn hexists(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, tok
         }))
         .is_err()
     {
-        eprintln!("angel panicked");
+        eprintln!("Failed to send command response: channel closed");
     }
 }

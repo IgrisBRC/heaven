@@ -20,7 +20,7 @@ pub fn lindex(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, toke
             }))
             .is_err()
     {
-        eprintln!("angel panicked");
+        eprintln!("Failed to send command response: channel closed");
         return;
     }
 
@@ -46,7 +46,7 @@ pub fn lindex(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, toke
             }))
             .is_err()
         {
-            eprintln!("angel panicked");
+            eprintln!("Failed to send command response: channel closed");
         }
     } else if tx
         .send(Decree::Deliver(Gift {
@@ -55,6 +55,6 @@ pub fn lindex(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, toke
         }))
         .is_err()
     {
-        eprintln!("angel panicked");
+        eprintln!("Failed to send command response: channel closed");
     }
 }

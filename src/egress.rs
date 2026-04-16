@@ -24,7 +24,7 @@ pub fn egress(pilgrim_rx: Receiver<Decree>, egress_tx: Sender<Token>) {
                     if send::send(stream, gift, &mut buffer).is_err()
                         && egress_tx.send(token).is_err()
                     {
-                        eprintln!("angel panicked");
+                        eprintln!("Failed to send command response: channel closed");
                     };
                 }
             }

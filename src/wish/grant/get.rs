@@ -22,7 +22,7 @@ pub fn get(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token: 
             }))
             .is_err()
         {
-            eprintln!("angel panicked");
+            eprintln!("Failed to send command response: channel closed");
         }
 
         return;
@@ -48,6 +48,6 @@ pub fn get(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token: 
         }))
         .is_err()
     {
-        eprintln!("angel panicked");
+        eprintln!("Failed to send command response: channel closed");
     }
 }
