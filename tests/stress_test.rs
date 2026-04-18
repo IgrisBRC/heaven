@@ -1,4 +1,4 @@
-// Stress and concurrency tests for Jerusalem
+// Stress and concurrency tests for heaven
 // These tests verify the server handles concurrent connections properly
 
 use std::io::{Read, Write};
@@ -25,11 +25,11 @@ fn build_binary() -> PathBuf {
     }
 
     let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path.push("target/release/jerusalem");
+    path.push("target/release/heaven");
     path
 }
 
-/// Start the Jerusalem server
+/// Start the heaven server
 fn start_server(port: u16) -> Child {
     let binary = build_binary();
     let dbfilename = format!("stress_test_{}.rdb", port);

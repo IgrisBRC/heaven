@@ -22,11 +22,11 @@ fn build_binary() -> PathBuf {
 
     // Return path to the built binary
     let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    path.push("target/release/jerusalem");
+    path.push("target/release/heaven");
     path
 }
 
-/// Start the Jerusalem server as a subprocess
+/// Start the heaven server as a subprocess
 fn start_server(port: u16) -> Child {
     let binary = build_binary();
     let dbfilename = format!("test_{}.rdb", port);

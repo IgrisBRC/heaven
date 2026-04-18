@@ -51,7 +51,7 @@ Note: Every command is supposed to work just like how it would in Redis.
 
 ## Support for snapshots
 
-As it stands Jerusalem only supports .rdb style snapshots using rkyv. AOF is not yet supported.
+As it stands Heaven only supports .rdb style snapshots using rkyv. AOF is not yet supported.
 
 ### A Note on PING
 

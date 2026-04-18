@@ -1,7 +1,7 @@
 // src/tests/pubsub_test.rs
 //
 // Integration tests for SUBSCRIBE / UNSUBSCRIBE / PUBLISH.
-// Requires a running Jerusalem server on 127.0.0.1:6379.
+// Requires a running heaven server on 127.0.0.1:6379.
 //
 // All wire I/O is Vec<u8> / &[u8] — no UTF-8 assumption anywhere.
 //
@@ -22,7 +22,7 @@ use std::time::Duration;
 
 fn connect() -> TcpStream {
     let s = TcpStream::connect("127.0.0.1:6379")
-        .expect("Could not connect to Jerusalem. Is the server running on :6379?");
+        .expect("Could not connect to heaven. Is the server running on :6379?");
     s.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
     s
 }
@@ -154,7 +154,7 @@ fn test_subscribe_multiple_channels() {
 
     let resp = read_response(&mut s);
 
-    // Jerusalem sends one *3 confirmation frame per channel
+    // heaven sends one *3 confirmation frame per channel
     let frame_count = count_subsequence(&resp, b"subscribe");
     assert!(
         frame_count >= 3,
