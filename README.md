@@ -1,6 +1,13 @@
-# Jerusalem ⚔️
+# Heaven 
 
-This is under development, if you wanna know about the progress, keep reading. 
+This project is still in beta, and is not adviced to be used in production. 
+
+Keynote: There is no max memory limit, the DB will keep growing untill OOM.
+
+
+Heaven is an RESP2-compliant in-memory database completely written in safe Rust.
+
+It does not support all the commands, but as for the commands that are supported, it is a drop-in replacement for redis.
 
 ## What it supports right now
 
@@ -39,10 +46,16 @@ Note: Every command is supposed to work just like how it would in Redis.
 | **UNSUBSCRIBE** | Broadcast | `UNSUBSCRIBE event [event ...]` | Unsubscribes you from the event(s) |
 | **PUBLISH** | Broadcast | `PUBLISH event message` | Sends a message to all the clients subscribed to event |
 | **PING** | System | `PING` | Returns `PONG` |
+| **COMMAND** | System | `COMMAND` | Returns information about all the commands supported |
+
+
+## Support for snapshots
+
+As it stands Jerusalem only supports .rdb style snapshots using rkyv. AOF is not yet supported.
 
 ### A Note on PING
 
-Currently, Jerusalem requires the standard RESP array protocol format for all commands. Some clients may attempt to send a "naked" PING during pipelining without the array marker (`*`). This is currently not supported to keep the parser logic clean and focused on standard protocol adherence.
+Currently, Heaven requires the standard RESP array protocol format for all commands. Some clients may attempt to send a "naked" PING during pipelining without the array marker (`*`). This is currently not supported to keep the parser logic clean and focused on standard protocol adherence.
 
 ## Usage
 
@@ -66,12 +79,10 @@ https://crates.io/crates/rkyv
 
 https://crates.io/crates/ctrlc
 
-## Maybe plans
+## Future plans
 
+std::bytes
+Io_uring
+Metacommands
 Sharding
 
-## todo
-
-Metacommands
-
-Cli options
