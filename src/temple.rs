@@ -8,7 +8,7 @@ use crate::temple::{
     DatabaseCommand::{
         Append, ConfigGet, Decr, Del, Exists, Expire, Get, Hdel, Hexists, Hget, Hgetall, Hlen,
         Hmget, Hset, Incr, Lindex, Llen, Lpop, LpopM, Lpush, Lrange, Lrem, Lset, Mget, Mset, Rpop,
-        RpopM, Rpush, Sadd, Set, Sismember, Smembers, Srem, Strlen, Ttl,
+        RpopM, Rpush, Sadd, Set, Sismember, Smembers, Srem, Strlen, Ttl, Incrby
     },
 };
 
@@ -238,6 +238,11 @@ pub enum DatabaseCommand {
     },
     Incr {
         key: Vec<u8>,
+        time: u64,
+    },
+    Incrby {
+        key: Vec<u8>,
+        number: i64,
         time: u64,
     },
     Decr {
@@ -681,6 +686,36 @@ impl Temple {
                                             }
 
                                             Incr { key, time } => match soul.incr(key, time) {
+                                                Ok(number) => {
+                                                    if tx
+                                                        .send(Decree::Deliver(Gift {
+                                                            token,
+                                                            response: Response::Number(number),
+                                                        }))
+                                                        .is_err()
+                                                    {
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
+                                                    }
+                                                }
+                                                Err(sacrilege) => {
+                                                    if tx
+                                                        .send(Decree::Deliver(Gift {
+                                                            token,
+                                                            response: Response::Error(sacrilege),
+                                                        }))
+                                                        .is_err()
+                                                    {
+                                                        eprintln!(
+                                                            "Failed to send command response: channel closed"
+                                                        );
+                                                    }
+                                                }
+                                            },
+                                            Incrby { key, number, time } => match soul
+                                                .incrby(key, number, time)
+                                            {
                                                 Ok(number) => {
                                                     if tx
                                                         .send(Decree::Deliver(Gift {
@@ -1708,6 +1743,22 @@ impl Temple {
                 command_type: CommandType::Client(ClientCommand {
                     tx,
                     client_command_type: Database(Incr { key, time }),
+                }),
+            })
+            .is_err()
+        {
+            eprintln!("Failed to send command response: channel closed");
+        }
+    }
+
+    pub fn incrby(&self, key: Vec<u8>, number: i64, tx: Sender<Decree>, token: Token, time: u64) {
+        if self
+            .tx
+            .send(Wish {
+                token,
+                command_type: CommandType::Client(ClientCommand {
+                    tx,
+                    client_command_type: Database(DatabaseCommand::Incrby { key, number, time }),
                 }),
             })
             .is_err()

@@ -137,7 +137,7 @@ pub fn send(stream: &mut TcpStream, gift: Gift, response: &mut Vec<u8>) -> Resul
                 response.extend_from_slice(b"-ERR unknown command\r\n");
             }
             Sacrilege::IncorrectUsage(command) => match command {
-                Command::INCR | Command::DECR => {
+                Command::INCR | Command::DECR | Command::INCRBY => {
                     response.extend_from_slice(b"-ERR value is not an integer or out of range\r\n");
                 }
                 Command::LSET | Command::LINDEX => {
@@ -163,6 +163,8 @@ pub fn send(stream: &mut TcpStream, gift: Gift, response: &mut Vec<u8>) -> Resul
                     .extend_from_slice(b"-ERR wrong number of arguments for 'ex' command\r\n"),
                 Command::INCR => response
                     .extend_from_slice(b"-ERR wrong number of arguments for 'incr' command\r\n"),
+                Command::INCRBY => response
+                    .extend_from_slice(b"-ERR wrong number of arguments for 'incrby' command\r\n"),
                 Command::DECR => response
                     .extend_from_slice(b"-ERR wrong number of arguments for 'decr' command\r\n"),
                 Command::APPEND => response

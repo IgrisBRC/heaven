@@ -91,11 +91,13 @@ impl Soul {
             Some(Value::String(value)) => {
                 let mut itoa_buf = itoa::Buffer::new();
 
-                let Ok(mut number) = bytes_to_i64(value) else {
+                let Ok(number) = bytes_to_i64(value) else {
                     return Err(Sacrilege::IncorrectUsage(Command::INCR));
                 };
 
-                number += 1;
+                let number = number
+                    .checked_add(1)
+                    .ok_or(Sacrilege::IncorrectUsage(Command::INCR))?;
 
                 value.clear();
                 value.extend_from_slice(itoa_buf.format(number).as_bytes());
@@ -110,16 +112,57 @@ impl Soul {
         }
     }
 
+    pub fn incrby(
+        &mut self,
+        key: Vec<u8>,
+        number_to_increment_by: i64,
+        now: u64,
+    ) -> Result<i64, Sacrilege> {
+        match self.get_mut_valid_value(&key, now) {
+            Some(Value::String(value)) => {
+                let mut itoa_buf = itoa::Buffer::new();
+
+                let Ok(number) = bytes_to_i64(value) else {
+                    return Err(Sacrilege::IncorrectUsage(Command::INCRBY));
+                };
+
+                let number = number
+                    .checked_add(number_to_increment_by)
+                    .ok_or(Sacrilege::IncorrectUsage(Command::INCRBY))?;
+
+                value.clear();
+                value.extend_from_slice(itoa_buf.format(number).as_bytes());
+
+                Ok(number)
+            }
+            Some(_) => Err(Sacrilege::IncorrectUsage(Command::INCRBY)),
+            None => {
+                let mut itoa_buf = itoa::Buffer::new();
+
+                self.0.insert(
+                    key,
+                    (
+                        Value::String(itoa_buf.format(number_to_increment_by).into()),
+                        None,
+                    ),
+                );
+                Ok(number_to_increment_by)
+            }
+        }
+    }
+
     pub fn decr(&mut self, key: Vec<u8>, now: u64) -> Result<i64, Sacrilege> {
         match self.get_mut_valid_value(&key, now) {
             Some(Value::String(value)) => {
                 let mut itoa_buf = itoa::Buffer::new();
 
-                let Ok(mut number) = bytes_to_i64(value) else {
+                let Ok(number) = bytes_to_i64(value) else {
                     return Err(Sacrilege::IncorrectUsage(Command::DECR));
                 };
 
-                number -= 1;
+                let number = number
+                    .checked_add(-1)
+                    .ok_or(Sacrilege::IncorrectUsage(Command::DECR))?;
 
                 value.clear();
                 value.extend_from_slice(itoa_buf.format(number).as_bytes());

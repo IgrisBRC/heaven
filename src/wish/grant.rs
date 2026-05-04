@@ -2,7 +2,7 @@ use mio::Token;
 
 use crate::{
     temple::Temple,
-    wish::{Response, Sacrilege},
+    wish::{InfoType, Response, Sacrilege},
 };
 
 use std::sync::mpsc::Sender;
@@ -23,6 +23,7 @@ mod hlen;
 mod hmget;
 mod hset;
 mod incr;
+mod incrby;
 mod lindex;
 mod llen;
 mod lpop;
@@ -70,6 +71,8 @@ pub fn grant(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token
         del::del(terms, temple, tx, token);
     } else if cmd.eq_ignore_ascii_case(b"EXISTS") {
         exists::exists(terms, temple, tx, token);
+    } else if cmd.eq_ignore_ascii_case(b"INCRBY") {
+        incrby::incrby(terms, temple, tx, token);
     } else if cmd.eq_ignore_ascii_case(b"INCR") {
         incr::incr(terms, temple, tx, token);
     } else if cmd.eq_ignore_ascii_case(b"DECR") {
@@ -134,6 +137,16 @@ pub fn grant(terms: Vec<Vec<u8>>, temple: &mut Temple, tx: Sender<Decree>, token
         unsubscribe::unsubscribe(terms, temple, tx, token);
     } else if cmd.eq_ignore_ascii_case(b"CONFIG") {
         config::config(terms, temple, tx, token);
+    } else if cmd.eq_ignore_ascii_case(b"QUIT") {
+        if tx
+            .send(Decree::Deliver(Gift {
+                token,
+                response: Response::Info(InfoType::Ok),
+            }))
+            .is_err()
+        {
+            eprintln!("Failed to send command response: channel closed");
+        };
     } else if cmd.eq_ignore_ascii_case(b"COMMAND") {
         command::command(terms, tx, token);
 

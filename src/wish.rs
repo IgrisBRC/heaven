@@ -76,6 +76,7 @@ pub enum Command {
     GET,
     EX,
     INCR,
+    INCRBY,
     DECR,
     APPEND,
     STRLEN,

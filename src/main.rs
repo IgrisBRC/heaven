@@ -8,7 +8,7 @@ mod server;
 
 #[derive(Parser, Debug)]
 struct Args {
-    #[arg(long = "bind", default_value = "127.0.0.1")]
+    #[arg(long = "bind", default_value = "0.0.0.0")]
     ip: String,
 
     #[arg(long, default_value_t = 6379)]
