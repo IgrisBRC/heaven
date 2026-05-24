@@ -17,6 +17,12 @@ pub fn egress(pilgrim_rx: Receiver<Decree>, egress_tx: Sender<Token>) {
             Ok(Decree::Welcome(token, stream)) => {
                 egress_map.insert(token, stream);
             }
+            Ok(Decree::Goodbye(token)) => {
+                egress_map.remove(&token);
+                if egress_tx.send(token).is_err() {
+                    eprintln!("Failed to send sync map message: channel closed");
+                };
+            }
             Ok(Decree::Deliver(gift)) => {
                 if let Some(stream) = egress_map.get_mut(&gift.token) {
                     let token = gift.token;
@@ -24,7 +30,7 @@ pub fn egress(pilgrim_rx: Receiver<Decree>, egress_tx: Sender<Token>) {
                     if send::send(stream, gift, &mut buffer).is_err()
                         && egress_tx.send(token).is_err()
                     {
-                        eprintln!("Failed to send command response: channel closed");
+                        eprintln!("Failed to send sync map message: channel closed");
                     };
                 }
             }

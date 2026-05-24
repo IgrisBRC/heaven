@@ -9,15 +9,16 @@ use crate::wish::{
 };
 
 pub fn ping(terms: Vec<Vec<u8>>, tx: Sender<Decree>, token: Token) {
-    if terms.len() != 1
-        && tx
+    if terms.len() != 1 {
+        if tx
             .send(Decree::Deliver(Gift {
                 token,
                 response: Response::Error(Sacrilege::IncorrectNumberOfArguments(Command::PING)),
             }))
             .is_err()
-    {
-        eprintln!("Failed to send command response: channel closed");
+        {
+            eprintln!("Failed to send command response: channel closed");
+        }
         return;
     }
 

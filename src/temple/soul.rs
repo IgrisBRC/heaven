@@ -534,7 +534,7 @@ impl Soul {
                     starting_index = 0;
                 }
 
-                if ending_index > list_len {
+                if ending_index >= list_len {
                     ending_index = list_len - 1;
                 }
 

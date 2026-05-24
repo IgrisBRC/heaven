@@ -145,17 +145,25 @@ pub fn run(
         while let Ok((token, mut pilgrim)) = ingress_rx.try_recv() {
             if poll
                 .registry()
-                .reregister(
-                    &mut pilgrim.stream,
-                    token,
-                    Interest::READABLE | Interest::WRITABLE,
-                )
+                .reregister(&mut pilgrim.stream, token, Interest::READABLE)
                 .is_err()
             {
                 // eprintln!("reregister() failed");
             }
 
             ingress_map.insert(token, pilgrim);
+        }
+
+        while let Ok(token) = egress_rx.try_recv() {
+            if token == SERVER {
+                std::process::exit(0);
+            }
+
+            if let Some(mut pilgrim) = ingress_map.remove(&token)
+                && poll.registry().deregister(&mut pilgrim.stream).is_err()
+            {
+                eprintln!("deregister() failed")
+            }
         }
 
         for event in &events {
@@ -168,11 +176,7 @@ pub fn run(
 
                             if poll
                                 .registry()
-                                .register(
-                                    &mut stream,
-                                    pilgrim_token,
-                                    Interest::READABLE | Interest::WRITABLE,
-                                )
+                                .register(&mut stream, pilgrim_token, Interest::READABLE)
                                 .is_err()
                             {
                                 eprintln!("register() failed");
@@ -227,6 +231,7 @@ pub fn run(
                     if let Some(mut pilgrim) = ingress_map.remove(&Token(token_number)) {
                         let sanctum = temple.sanctify();
                         let tx = ingress_tx.clone();
+                        let pilgrim_tx = pilgrim_tx.clone();
 
                         ingress_choir.sing(move || {
                             match wish::wish(&mut pilgrim, sanctum, Token(token_number)) {
@@ -236,6 +241,9 @@ pub fn run(
                                     }
                                 }
                                 Err(_e) => {
+                                    if pilgrim_tx.send(Decree::Goodbye(Token(token_number))).is_err() {
+                                 eprintln!("Failed to remove disconnected FD from FD map: channel closed");
+                                    }
                                     // eprintln!("{:?}", e);
                                 }
                             }

@@ -16,7 +16,7 @@ pub fn send(stream: &mut TcpStream, gift: Gift, response: &mut Vec<u8>) -> Resul
         }
         Response::Info(InfoType::Command) => {
             response.extend_from_slice(
-                b"*32\r\n\
+                b"*37\r\n\
                 *6\r\n$3\r\nset\r\n:-3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
                 *6\r\n$3\r\nget\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
                 *6\r\n$6\r\nappend\r\n:3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
@@ -48,7 +48,13 @@ pub fn send(stream: &mut TcpStream, gift: Gift, response: &mut Vec<u8>) -> Resul
                 *6\r\n$3\r\nttl\r\n:2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
                 *6\r\n$6\r\nexpire\r\n:3\r\n*2\r\n+write\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
                 *6\r\n$7\r\npublish\r\n:3\r\n*3\r\n+pubsub\r\n+loading\r\n+stale\r\n:0\r\n:0\r\n:0\r\n\
-                *6\r\n$4\r\nping\r\n:-1\r\n*2\r\n+stale\r\n+fast\r\n:0\r\n:0\r\n:0\r\n");
+                *6\r\n$4\r\nping\r\n:-1\r\n*2\r\n+stale\r\n+fast\r\n:0\r\n:0\r\n:0\r\n\
+                *6\r\n$9\r\nsubscribe\r\n:-2\r\n*3\r\n+pubsub\r\n+loading\r\n+stale\r\n:0\r\n:0\r\n:0\r\n\
+                *6\r\n$11\r\nunsubscribe\r\n:-1\r\n*3\r\n+pubsub\r\n+loading\r\n+stale\r\n:0\r\n:0\r\n:0\r\n\
+                *6\r\n$4\r\nmset\r\n:-3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$4\r\nmget\r\n:-2\r\n*2\r\n+readonly\r\n+fast\r\n:1\r\n:1\r\n:1\r\n\
+                *6\r\n$6\r\nincrby\r\n:3\r\n*2\r\n+write\r\n+denyoom\r\n:1\r\n:1\r\n:1\r\n",
+            );
         }
         Response::BulkString(bulk_string) => match bulk_string {
             Some(value) => {

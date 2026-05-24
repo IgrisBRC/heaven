@@ -54,6 +54,7 @@ pub struct Gift {
 
 pub enum Decree {
     Welcome(Token, mio::net::TcpStream),
+    Goodbye(Token),
     Deliver(Gift),
     Broadcast(Token, Vec<u8>, Vec<u8>, Vec<Token>),
 }

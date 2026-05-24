@@ -181,7 +181,11 @@ pub fn wish(pilgrim: &mut Pilgrim, mut temple: Temple, token: Token) -> Result<(
             Phase::AwaitingTermCount => {
                 if let Some(index) = util::find_crlf(active_window) {
                     virtue.expected_terms = bytes_to_usize(&active_window[..index])?;
-                    virtue.phase = Phase::GraspingMarker;
+                    if virtue.expected_terms == 0 {
+                        virtue.phase = Phase::Idle;
+                    } else {
+                        virtue.phase = Phase::GraspingMarker;
+                    }
                     virtue.read_idx += index + 2;
                 } else {
                     if virtue.potentially_resize_and_read(&mut pilgrim.stream)? {
@@ -196,6 +200,7 @@ pub fn wish(pilgrim: &mut Pilgrim, mut temple: Temple, token: Token) -> Result<(
                     virtue.phase = Phase::AwaitingBulkStringLength;
                     virtue.read_idx += 1;
                 } else {
+                    virtue.read_idx += 1;
                     if virtue.potentially_resize_and_read(&mut pilgrim.stream)? {
                         return Ok(());
                     }

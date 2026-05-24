@@ -15,6 +15,10 @@ pub fn bytes_to_i32(bytes: &[u8]) -> Result<i32, Sin> {
         (false, 0)
     };
 
+    if bytes[start..].len() == 0 {
+        return Err(Sin::ParseError);
+    }
+
     let mut result = 0i32;
     for &b in &bytes[start..] {
         if !b.is_ascii_digit() {
@@ -65,6 +69,10 @@ pub fn bytes_to_i64(bytes: &[u8]) -> Result<i64, Sin> {
     } else {
         (false, 0)
     };
+
+    if bytes[start..].len() == 0 {
+        return Err(Sin::ParseError);
+    }
 
     let mut result = 0i64;
     for &b in &bytes[start..] {
