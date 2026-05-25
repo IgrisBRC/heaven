@@ -123,18 +123,6 @@ pub fn run(
     };
 
     loop {
-        while let Ok(token) = egress_rx.try_recv() {
-            if token == SERVER {
-                std::process::exit(0);
-            }
-
-            if let Some(mut pilgrim) = ingress_map.remove(&token)
-                && poll.registry().deregister(&mut pilgrim.stream).is_err()
-            {
-                eprintln!("deregister() failed")
-            }
-        }
-
         if poll
             .poll(&mut events, Some(std::time::Duration::from_millis(100)))
             .is_err()
